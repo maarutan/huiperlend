@@ -1,0 +1,25 @@
+#! /bin/sh
+
+pgrep -x sxhkd > /dev/null || sxhkd &
+~/.local/bin/wallpapers/autostart.py &
+dunst &
+bspc monitor -d I II III IV V VI VII VIII IX X
+picom --config "$(cat $HOME/.config/picom/.current_config)"
+
+bspc config border_width         5
+bspc config window_gap          15
+
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   false
+bspc config gapless_monocle      false
+
+
+# read python script ---------------
+
+bspc config left_padding          0
+bspc config top_padding           0
+bspc config right_padding         0
+bspc config bottom_padding        0
+
+# read python script ---------------
