@@ -8,7 +8,7 @@ ROFI_CONFIG = pathlib.Path(__file__).parent.parent / "assets/rofi_theme/theme.ra
 ASSETS = pathlib.Path(__file__).parent.parent / "assets/theme"
 RESULT = pathlib.Path(__file__).parent.parent / "assets/.cache/type"
 CACHE_TYPE = pathlib.Path(__file__).parent.parent / "assets/.cache/type"
-CACHE_THEME = pathlib.Path(__file__).parent.parent / "assets/.cache/theme"
+CACHE_THEME = pathlib.Path.home() / ".cache/current_theme"
 
 
 def get_theme_cache():

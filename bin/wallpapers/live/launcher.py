@@ -29,6 +29,13 @@ DEFAULT_WALL = DEFAULT_WALLS[0] if DEFAULT_WALLS else ""
 TEMPLATE_STORAGE = "/tmp/wallpaper_storage"
 TEMPLATE_STORAGE_THEME = "/tmp/wallpaper_storage_theme"
 
+
+def exist_ok(name: str):
+    path = pathlib.Path(name)
+    if not path.exists():
+        path.touch()
+
+
 os.makedirs(CACHE_WALL, exist_ok=True)
 
 
@@ -271,7 +278,7 @@ def rofi() -> str:
 
 
 def video_start(video_path) -> None:
-    # shell(["pkill", "-f", "mpvpaper"])
+    shell(["pkill", "-f", "swww-daemon"])
     try:
         result = shell(["wlr-randr"], capture_output=True, text=True, check=True)
         monitors = [
@@ -302,7 +309,7 @@ def wall_start() -> None:
         video_start(selected_wall)
 
     elif selected_wall.endswith(("gif", "webp")):
-        shell(["swww-demon"])
+        shell(["swww-daemon"])
         video_start(selected_wall)
 
     # if SCREEN_LOCK and read_template() == read_current_wall():
@@ -312,6 +319,8 @@ def wall_start() -> None:
 
 try:
     if __name__ == "__main__":
+        exist_ok(str(CACHE_THEME))
+        exist_ok(str(CACHE_WALL))
         wall_start()
 except KeyboardInterrupt:
     print("\n cancel")

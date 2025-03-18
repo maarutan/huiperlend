@@ -3,7 +3,7 @@
 from images.launcher import wall_start as images
 from live.launcher import wall_start as live
 from logic.choice_theme import CACHE_TYPE
-from subprocess import run as shell
+from subprocess import run as shell, os
 
 
 def read_cache_type() -> str:
@@ -20,5 +20,8 @@ try:
         live()
     elif read_cache_type() == "static":
         images()
+    elif read_cache_type() == "":
+        images()
+
 except KeyboardInterrupt:
     print("\n  cancel")

@@ -12,6 +12,7 @@ from PIL import Image
 import random
 import pathlib
 from shutil import rmtree
+import psutil
 
 ROFI_THEME = pathlib.Path(__file__).parent.parent / "assets/rofi_theme/wall.rasi"
 CACHE_THEME = pathlib.Path.home() / ".cache/current_theme"
@@ -165,7 +166,6 @@ def get_info_wall_thumbnail() -> list:
         cache_path = os.path.join(CACHE_WALL, os.path.basename(path))
 
         if os.path.isfile(source_path) and source_path.endswith(extensions):
-            # Проверяем, существует ли директория перед сохранением
             os.makedirs(os.path.dirname(cache_path), exist_ok=True)
 
             if not os.path.exists(cache_path):
@@ -247,18 +247,10 @@ def is_process_running(process_name):
 
 
 def wall_start() -> None:
-    if is_process_running("swww-demon"):
-        shell(
-            [
-                "swww",
-                "img",
-                rofi(),
-                "--transition-type",
-                "fade",
-            ]
-        )
-    else:
-        shell(["swww-demon"])
+    if is_process_running("mpvpaper"):
+        shell(["pkill", "-f", "mpvpaper"])
+
+    if is_process_running("swww-daemon"):
         shell(
             [
                 "swww",
@@ -269,13 +261,25 @@ def wall_start() -> None:
             ]
         )
 
-    if SCREEN_LOCK and read_template() == read_current_wall():
-        return
-    storage_lockscreen()
+    else:
+        shell(["swww-daemon"])
+        shell(
+            [
+                "swww",
+                "img",
+                rofi(),
+                "--transition-type",
+                "fade",
+            ]
+        )
+
+    # if SCREEN_LOCK and read_template() == read_current_wall():
+    #     return
+    # storage_lockscreen()
 
 
 if __name__ == "__main__":
     try:
         wall_start()
-    except:
-        print("\n  cancel")
+    except Exception as e:
+        print(f"\n  Error: {e}")
