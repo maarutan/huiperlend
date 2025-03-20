@@ -1,4 +1,10 @@
-/* light blue borders for active, more transparent bg and more border-radius */
+/*  ┌─┐┌┐┌┬┌┬┐┌─┐┌┬┐┬┌─┐┌┐┌ */
+/*  ├─┤│││││││├─┤ │ ││ ││││ */
+/*  ┴ ┴┘└┘┴┴ ┴┴ ┴ ┴ ┴└─┘┘└┘ */
+/* -------------------------------------------- */
+/*  (c) maarutan   https://github.com/maarutan */
+/*  (c) vlaarutan  https://github.com/vlaarutan  */
+
 :root {
   --border-color-active: rgba(17, 170, 217, 0.9);
   --bg-color: #0c0c0c;

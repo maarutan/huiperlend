@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# ─┐ ┬┌┬┐┌─┐  ┌─┐┌─┐┬─┐┌┬┐┌─┐┬
+# ┌┴┬┘ │││ ┬  ├─┘│ │├┬┘ │ ├─┤│
+# ┴ └──┴┘└─┘  ┴  └─┘┴└─ ┴ ┴ ┴┴─┘
+# --------------------------------------------
+# (c) maarutan   https://github.com/maarutan
+# (c) vlaarutan  https://github.com/vlaarutan
+#
 
 import subprocess
 from time import sleep
