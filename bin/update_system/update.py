@@ -20,9 +20,11 @@ FETCH = True
 
 # packages
 PACMAN = True
-YAY = True
-PARU = False
+YAY = False
+PARU = True
 FLATPAK = False
+
+
 END_DELAY = 5
 
 

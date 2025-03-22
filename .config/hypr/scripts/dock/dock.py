@@ -23,16 +23,16 @@ import sys
 
 
 DEBUG = False
-DOCK_TYPE = "always"  # "push", "always", "nothower" or "intelectual"
+DOCK_TYPE = "intelectual"  # "push", "always", "nothower" or "intelectual"
 LAUNCH_UP = True
 LAUNCHERS = "rofi -show drun"
 LAUNCHERS_POS = "left"  # "left" or "right"
 FULL_DOCK = True  # (default False )
 POSITION_DOCK = "right"  # "left" "right" "center" "bottom" (default "center")
 ALIMENT_DOCK = "center"  # "start", "center" or "end" (default "center")
-HEIGHT_DOCK = 90
+HEIGHT_DOCK = 30
 ICON_SIZE = 48
-MARGIN_DOCK = [0, 80, 80, 0]  # [left, top, bottom, right] (default [0, 0, 0, 0])
+MARGIN_DOCK = [0, 80, 80, 10]  # [left, top, bottom, right] (default [0, 0, 0, 0])
 LAUNCHERS_ICON = (
     pathlib.Path.home()
     / ".config"
