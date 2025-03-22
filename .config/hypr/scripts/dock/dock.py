@@ -15,37 +15,52 @@ import subprocess
 import socket
 import argparse
 import shutil
+import pathlib
+import sys
 
 
 # INFO:-------=== Global Variables ===-------
 
 
 DEBUG = False
-DOCK_TYPE = "intelectual"  # "push", "nothower" or "intelectual"
+DOCK_TYPE = "always"  # "push", "always", "nothower" or "intelectual"
 LAUNCH_UP = True
 LAUNCHERS = "rofi -show drun"
 LAUNCHERS_POS = "left"  # "left" or "right"
 FULL_DOCK = True  # (default False )
-POSITION_DOCK = "bottom"  # "left" "right" "center" "bottom" (default "center")
+POSITION_DOCK = "right"  # "left" "right" "center" "bottom" (default "center")
 ALIMENT_DOCK = "center"  # "start", "center" or "end" (default "center")
-HEIGHT_DOCK = 32  # default 48
-MARGIN_DOCK = [750, 00, 00, 750]  # [left, top, bottom, right] (default [0, 0, 0, 0])
+HEIGHT_DOCK = 90
+ICON_SIZE = 48
+MARGIN_DOCK = [0, 80, 80, 0]  # [left, top, bottom, right] (default [0, 0, 0, 0])
 LAUNCHERS_ICON = (
-    "-ico '/usr/share/icons/Papirus-Dark/symbolic/actions/view-app-grid-symbolic.svg'"
+    pathlib.Path.home()
+    / ".config"
+    / "hypr"
+    / "scripts"
+    / "dock"
+    / ".icon"
+    / "grid_dark.svg"
 )
+
 
 # DONE:-------=== Functions ===-------
 
 
 def main():
     try:
-        if DOCK_TYPE == "intelectual":
-            start_dock("-d")
-        elif DOCK_TYPE == "push":
-            start_dock("-x")
-        elif DOCK_TYPE == "nothower":
-            start_dock("-r")
-        listen_for_events()
+        if dynamic():
+            if DOCK_TYPE == "intelectual":
+                start_dock("-d")
+            elif DOCK_TYPE == "nothower":
+                start_dock("-r")
+            listen_for_events()
+        else:
+            if DOCK_TYPE == "push":
+                start_dock("-x")
+            if DOCK_TYPE == "always":
+                start_dock("-r")
+            listen_for_events_for_not_dynamic()
     except KeyboardInterrupt:
         print("\n\nbye bye !!!")
 
@@ -65,6 +80,13 @@ def get_active_ws_id(monitor_info):
     ws_id = lines[1]
     special_ws_id = lines[2]
     return special_ws_id if special_ws_id != "0" else ws_id
+
+
+def dynamic() -> bool:
+    if DOCK_TYPE == "intelectual" or DOCK_TYPE == "nothower":
+        return True
+    else:
+        return False
 
 
 def get_fullscreen_state():
@@ -105,6 +127,39 @@ def handle(event):
         elif event.startswith("focusedmon"):
             show_hide_dock()
             toggle_dock("hide")
+
+
+def handle_for_not_dynamic(event):
+    if DEBUG:
+        print(f"Handling event: {event}")
+    if event.startswith("fullscreen>>"):
+        fullscreen_state = event.split(">>")[1]
+        if fullscreen_state.isdigit():
+            fullscreen_state = int(fullscreen_state)
+            if fullscreen_state > 0:
+                if DEBUG:
+                    print("Fullscreen detected, hiding dock.")
+                toggle_dock("hide")
+            else:
+                if DEBUG:
+                    print("Exiting fullscreen, showing dock.")
+                toggle_dock("show")
+    else:
+        if any(
+            event.startswith(prefix)
+            for prefix in [
+                "changefloatingmode",
+                "workspacev2",
+                "closewindow",
+                "openwindow",
+                "activespecial",
+            ]
+        ):
+            # show_hide_dock()
+            toggle_dock("show")
+        elif event.startswith("focusedmon"):
+            # show_hide_dock()
+            toggle_dock("show")
 
 
 def show_hide_dock():
@@ -160,13 +215,13 @@ def show_hide_dock():
     toggle_dock("show" if should_show else "hide")
 
 
-def start_dock(TYPE_DOCK: str = "-r"):
+def start_dock(TYPE_DOCK: str, UPDATE_DOCK: bool = True):
     try:
         args = [
             "nwg-dock-hyprland",
             TYPE_DOCK,
             "-i",
-            str(HEIGHT_DOCK),
+            str(ICON_SIZE),
             "-a",
             ALIMENT_DOCK,
             "-p",
@@ -188,12 +243,17 @@ def start_dock(TYPE_DOCK: str = "-r"):
                 args.extend(["-c", str(LAUNCHERS), "-lp", "start"])
             elif LAUNCHERS_POS == "right":
                 args.extend(["-c", str(LAUNCHERS), "-lp", "end"])
-            args.extend(LAUNCHERS_ICON)
 
-        subprocess.Popen(args)
+        args.extend(["-ico", str(LAUNCHERS_ICON)])
 
         time.sleep(0.6)
-        show_hide_dock()
+        if UPDATE_DOCK:
+            show_hide_dock()
+            subprocess.Popen(args)
+        else:
+            subprocess.run(args)
+            sys.exit(0)
+
     except Exception as e:
         print(f"Error in start_dock: {e}")
 
@@ -205,13 +265,31 @@ def listen_for_events():
             f"hypr/{os.environ.get('HYPRLAND_INSTANCE_SIGNATURE', '')}/.socket2.sock",
         )
         if DEBUG:
-            print(f"Connecting to socket at {socket_path}")  # Лог для отладки
+            print(f"Connecting to socket at {socket_path}")
 
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
             client.connect(socket_path)
             with client.makefile("r") as stream:
                 for line in stream:
                     handle(line.strip())
+    except Exception as e:
+        print(f"Error in listen_for_events: {e}")
+
+
+def listen_for_events_for_not_dynamic():
+    try:
+        socket_path = os.path.join(
+            os.environ.get("XDG_RUNTIME_DIR", "/run/user/1000"),
+            f"hypr/{os.environ.get('HYPRLAND_INSTANCE_SIGNATURE', '')}/.socket2.sock",
+        )
+        if DEBUG:
+            print(f"Connecting to socket at {socket_path}")
+
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+            client.connect(socket_path)
+            with client.makefile("r") as stream:
+                for line in stream:
+                    handle_for_not_dynamic(line.strip())
     except Exception as e:
         print(f"Error in listen_for_events: {e}")
 
