@@ -27,12 +27,12 @@ DOCK_TYPE = "intelectual"  # "push", "always", "nothower" or "intelectual"
 LAUNCH_UP = True
 LAUNCHERS = "rofi -show drun"
 LAUNCHERS_POS = "left"  # "left" or "right"
-FULL_DOCK = True  # (default False )
-POSITION_DOCK = "right"  # "left" "right" "center" "bottom" (default "center")
+FULL_DOCK = False  # (default False )
+POSITION_DOCK = "bottom"  # "left" "right" "center" "bottom" (default "center")
 ALIMENT_DOCK = "center"  # "start", "center" or "end" (default "center")
 HEIGHT_DOCK = 30
 ICON_SIZE = 48
-MARGIN_DOCK = [0, 80, 80, 10]  # [left, top, bottom, right] (default [0, 0, 0, 0])
+MARGIN_DOCK = [0, 00, 10, 00]  # [left, top, bottom, right] (default [0, 0, 0, 0])
 LAUNCHERS_ICON = (
     pathlib.Path.home()
     / ".config"
@@ -59,7 +59,7 @@ def main():
             if DOCK_TYPE == "push":
                 start_dock("-x")
             if DOCK_TYPE == "always":
-                start_dock("-r")
+                start_dock("-r", UPDATE_DOCK=False)
             listen_for_events_for_not_dynamic()
     except KeyboardInterrupt:
         print("\n\nbye bye !!!")
@@ -198,8 +198,13 @@ def show_hide_dock():
     windows_data = json.loads(
         subprocess.run(
             ["hyprctl", "clients", "-j"], capture_output=True, text=True
-        ).stdout
+        ).stdout.strip()
     )
+
+    if window_count == 0 or windows_data == "[]":
+        toggle_dock("show")
+        return
+
     should_show = True
 
     for window in windows_data:
@@ -245,6 +250,7 @@ def start_dock(TYPE_DOCK: str, UPDATE_DOCK: bool = True):
                 args.extend(["-c", str(LAUNCHERS), "-lp", "end"])
 
         args.extend(["-ico", str(LAUNCHERS_ICON)])
+        args.extend(["2>/dev/null"])
 
         time.sleep(0.6)
         if UPDATE_DOCK:
@@ -298,6 +304,16 @@ def check_nwg_dock_hyprland():
     return shutil.which("nwg-dock-hyprland") is not None
 
 
+def windows_data():
+    """Получает список активных окон в Hyprland"""
+    result = json.loads(
+        subprocess.run(
+            ["hyprctl", "clients", "-j"], capture_output=True, text=True
+        ).stdout.strip(),
+    )
+    return result
+
+
 if __name__ == "__main__":
     if check_nwg_dock_hyprland():
         parser = argparse.ArgumentParser(description="hyprdock")
@@ -315,7 +331,25 @@ if __name__ == "__main__":
         elif args.toggle:
             subprocess.run(TOGGLE_SIGNAL, shell=True)
         else:
-            main()
+            while True:
+                active_windows = str(windows_data())
+
+                if active_windows == "[]":
+                    start_dock(
+                        "-x",
+                        UPDATE_DOCK=True,
+                    )
+                else:
+                    subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
+                    start_dock(
+                        "-r",
+                        UPDATE_DOCK=True,
+                    )
+                    subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
+                    toggle_dock("hide")
+                    main()
+                    break
+
     else:
         print("nwg-dock-hyprland not found")
-        subprocess.run("notify-send 'nwg-dock-hyprland not found'", shell=True)
+        subprocess.run(["notify-send", "nwg-dock-hyprland not found"])
