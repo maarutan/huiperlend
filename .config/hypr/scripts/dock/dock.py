@@ -5,7 +5,6 @@
 # ─┴┘└─┘└─┘┴ ┴  ┴ ┴ ┴ ┴  ┴└─┴─┘┴ ┴┘└┘─┴┘
 # --------------------------------------------
 # (c) maarutan   https://github.com/maarutan
-# (c) vlaarutan  https://github.com/vlaarutan
 
 
 import os
@@ -305,7 +304,6 @@ def check_nwg_dock_hyprland():
 
 
 def windows_data():
-    """Получает список активных окон в Hyprland"""
     result = json.loads(
         subprocess.run(
             ["hyprctl", "clients", "-j"], capture_output=True, text=True
@@ -314,7 +312,34 @@ def windows_data():
     return result
 
 
+def write_file(path: str, content: str) -> None:
+    with open(path, "w") as f:
+        f.write(content)
+
+
 if __name__ == "__main__":
+    pkill_dock = lambda: subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
+    state_dock = pathlib.Path.home() / ".cache" / "state_dock"
+
+    def read_state_dock() -> str:
+        if not pathlib.Path(state_dock).exists():
+            write_file(str(state_dock), "enable")
+        with open(state_dock, "r") as f:
+            return f.read()
+
+    read_state = read_state_dock()
+
+    def toggle_dock_main():
+        tmp_file = "/tmp/dock_toggle"
+        if pathlib.Path(tmp_file).exists():
+            pathlib.Path(tmp_file).unlink()
+            write_file(str(state_dock), "enable")
+            main()
+        else:
+            write_file(tmp_file, "show")
+            write_file(str(state_dock), "disable")
+            pkill_dock()
+
     if check_nwg_dock_hyprland():
         parser = argparse.ArgumentParser(description="hyprdock")
         parser.add_argument(
@@ -323,39 +348,52 @@ if __name__ == "__main__":
         parser.add_argument(
             "-d", "--disable", action="store_true", help="Kill hyprdock"
         )
+        parser.add_argument(
+            "-a", "--autostart", action="store_true", help="Autostart hyprdock"
+        )
+        parser.add_argument(
+            "-e", "--enable", action="store_true", help="Autostart hyprdock"
+        )
 
         args = parser.parse_args()
 
-        if args.disable:
-            subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
-        elif args.toggle:
-            tmp_file = "/tmp/dock_toggle"
-            if pathlib.Path(tmp_file).exists():
-                pathlib.Path(tmp_file).unlink()
+        if args.autostart:
+            if read_state == "disable":
+                ...
+            elif read_state == "enable":
                 main()
-            else:
-                with open(tmp_file, "w") as f:
-                    f.write("show")
-                subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
-        else:
-            while True:
-                active_windows = str(windows_data())
 
-                if active_windows == "[]":
-                    start_dock(
-                        "-x",
-                        UPDATE_DOCK=True,
-                    )
-                else:
-                    subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
-                    start_dock(
-                        "-r",
-                        UPDATE_DOCK=True,
-                    )
-                    subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
-                    toggle_dock("hide")
-                    main()
-                    break
+        elif args.disable:
+            pkill_dock()
+            write_file(str(state_dock), "disable")
+
+        elif args.enable:
+            main()
+            write_file(str(state_dock), "enable")
+
+        if args.toggle:
+            toggle_dock_main()
+
+        else:
+            if read_state == "enable":
+                while True:
+                    active_windows = str(windows_data())
+
+                    if active_windows == "[]":
+                        start_dock(
+                            "-x",
+                            UPDATE_DOCK=True,
+                        )
+                    else:
+                        pkill_dock()
+                        start_dock(
+                            "-r",
+                            UPDATE_DOCK=True,
+                        )
+                        pkill_dock()
+                        toggle_dock("hide")
+                        main()
+                        break
 
     else:
         print("nwg-dock-hyprland not found")
