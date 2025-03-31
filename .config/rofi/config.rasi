@@ -22,10 +22,10 @@
 }
 
 configuration {
-    display-drun: "   Apps ";
-    display-run: "   Run ";
-    display-window: "   window";
-    display-Network: " 󰤨  Network";
+    display-drun: "~~>  ";
+    display-run: "~~>  ";
+    display-window: "~~>  ";
+    display-ssh: "~~>  ";
     drun-display-format: "{icon} {name}";
     show-icons: true;
     disable-history: false;
@@ -83,12 +83,12 @@ window {
     border: 2px 0px 0px;
     border-color: @border-color;
     spacing: 2px;
-    scrollbar: true;
+    scrollbar: false;
     padding: 2px 0px 0px;
 }
 
 element-icon {
-    size: 40px;
+    size: 20px;
 }
 
 #element {

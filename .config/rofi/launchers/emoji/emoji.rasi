@@ -1,6 +1,6 @@
 /*****----- Configuration -----*****/
 configuration {
-    modi: "clipboard:greenclip print";
+    modi: "emoji";
     show-icons: false;
     display-drun:               "~~> ";
     drun-display-format:        "{name}";
