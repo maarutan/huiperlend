@@ -336,7 +336,7 @@ if __name__ == "__main__":
             write_file(str(state_dock), "enable")
             main()
         else:
-            write_file(tmp_file, "show")
+            write_file(tmp_file, "disable")
             write_file(str(state_dock), "disable")
             pkill_dock()
 
