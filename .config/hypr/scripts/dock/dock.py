@@ -329,7 +329,14 @@ if __name__ == "__main__":
         if args.disable:
             subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
         elif args.toggle:
-            subprocess.run(TOGGLE_SIGNAL, shell=True)
+            tmp_file = "/tmp/dock_toggle"
+            if pathlib.Path(tmp_file).exists():
+                pathlib.Path(tmp_file).unlink()
+                main()
+            else:
+                with open(tmp_file, "w") as f:
+                    f.write("show")
+                subprocess.run(["pkill", "-f", "nwg-dock-hyprland"])
         else:
             while True:
                 active_windows = str(windows_data())
