@@ -11,7 +11,7 @@
   "width":     1780, // Waybar width
   "spacing":   15,    // Gaps between modules (4px)
   "border-radius": 20,// Waybar at border radius
-  "style.css": "theme.css",
+  "style-config": "current.css",
 
 
   // --- [ Choose the order of the modules ] ---
@@ -278,5 +278,6 @@
     "icon": true
   },
 }
+
 
 

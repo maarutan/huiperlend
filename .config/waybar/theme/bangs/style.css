@@ -2,7 +2,7 @@
 /* │  │ ││││├┤ ││ ┬│ │├┬┘├┤  */
 /* └─┘└─┘┘└┘└  ┴└─┘└─┘┴└─└─┘ */
 
-@import url("./.colorscheme/theme.css");
+@import url("../.colorscheme/theme.css");
 * {
   font-family: FiraCode nerd font;
   font-size: 18px;
