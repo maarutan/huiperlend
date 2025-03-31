@@ -5,8 +5,6 @@
 # ┴ ┴┴┴─┘┴─┘┴ ┴└─┘ ┴ ┴ └┘ └─┘
 # --------------------------------------------
 # (c) maarutan   https://github.com/maarutan
-# (c) vlaarutan  https://github.com/vlaarutan
-#
 
 import json
 import subprocess
