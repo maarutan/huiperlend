@@ -12,17 +12,17 @@
 /* │││││││ │││ ││││└─┐ */
 /* └┴┘┴┘└┘─┴┘└─┘└┴┘└─┘ */
 window#waybar {
-  background: none;
+  background: transparent;
   color: @foreground;
   transition-duration: 0.5s;
 }
 
 window#waybar.termite {
-  background-color: #3f3f3f;
+  background-color: @bacground-alt;
 }
 
 window#waybar.chromium {
-  background-color: #000000;
+  background-color: @bacground;
   border: none;
 }
 
@@ -66,7 +66,7 @@ button:hover {
 
 #workspaces button.active {
   color: @foreground;
-  background: @border;
+  background: @foreground;
   border-radius: 15px;
   min-width: 60px;
   transition: all 0.3s ease-in-out;
@@ -127,13 +127,26 @@ button:hover {
 /* ┌─┐┌┐┌┌┬┐ */
 /* ├┤ │││ ││ */
 /* └─┘┘└┘─┴┘ */
-/* If workspaces is the leftmost module, omit left margin */
-.modules-left > widget:first-child > #workspaces {
-  margin-left: 30px;
+.modules-left {
+  border: solid 0.2px @foreground;
+  padding: 7px;
+  margin: 5px 0;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2); /* Пример rgba */
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.6);
 }
-/* If workspaces is the rightmost module, omit right margin */
-.modules-right > widget:last-child > #workspaces {
-  margin-right: 30px;
+
+/* .modules-center { */
+/* } */
+
+.modules-right {
+  border: solid 0.2px @foreground;
+  padding: 7px;
+  margin: 5px 0;
+  /* margin: 10px 10px 5px 0; */
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2); /* Пример rgba */
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.6);
 }
 
 /* ┌─┐┬  ┌─┐┌─┐┬┌─ */
@@ -148,6 +161,7 @@ button:hover {
   border-left: solid 0.2px @foreground;
   border-right: solid 0.2px @foreground;
 }
+
 #clock:hover {
   min-width: 300px;
 }

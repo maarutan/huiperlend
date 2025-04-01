@@ -7,11 +7,13 @@
 {
   "layer":    "top", // Waybar at top layer
   "position": "top", // Waybar position (top|bottom|left|right)
-  "height":    30,   // Waybar height (to be removed for auto height)
+  "height":    32,   // Waybar height (to be removed for auto height)
   "width":     1780, // Waybar width
-  "spacing":   15,    // Gaps between modules (4px)
+  "spacing":   16,    // Gaps between modules (4px)
   "border-radius": 20,// Waybar at border radius
-  "style-config": "current.css",
+  //---------------------------------
+  "style-config": "current.css", // Waybar current style.css 
+  //---------------------------------
 
 
   // --- [ Choose the order of the modules ] ---
@@ -26,15 +28,15 @@
   ],
 
   "modules-right": [
-      "cava",
+      // "cava",
+      "custom/network_speed",
       "custom/pacman",
       "memory",
       "tray",
       "custom/battery",
       "custom/network",
-      "power-profiles-daemon",
-      "hyprland/language",
       "battery",
+      "hyprland/language",
       "custom/power"
   ],
 
@@ -74,6 +76,16 @@
     "format": "{capacity}% {icon}",
     "format-icons": ["", "", "", "", ""],
     "max-length": 25
+  },
+
+  //---------------------------------------------------------
+  // Custom/network_speed 
+  //----------------------
+  "custom/network_speed": {
+    "format": " {} ",
+    "exec": "~/.config/waybar/modules/network_speed.py",
+    "exec-if": "exit 0",
+    "interval": 1
   },
 
   //---------------------------------------------------------

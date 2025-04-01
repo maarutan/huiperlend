@@ -11,7 +11,7 @@ from time import sleep
 # DONE: ####   -----=== global variables ===-----   ####
 
 SHOW = "set"  # get, set, all
-ICON = False  # True, False
+ICON = True  # True, False
 IF_ONLY_ONE = True  # if you choise only get or set icon will be this
 DEBUG = False  # show print no write current
 DELAY_TIME = 1  # for while in seconds

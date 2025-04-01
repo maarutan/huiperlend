@@ -1,2 +1,2 @@
-1.conf == dark | theme
-2.conf == light | theme
+1.css == dark | theme
+2.css == light | theme
