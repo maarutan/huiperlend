@@ -58,7 +58,7 @@ def read_jsonc():
 def main(args):
     if args.theme:
         theme_path = CONFIG_JSON.parent / DIR_NAME_COLORSHEME / args.theme / "style.css"
-        target_path = CONFIG_JSON.parent / "current.css"
+        target_path = CONFIG_JSON.parent / DIR_NAME_COLORSHEME / "current.css"
         target_path.write_text(theme_path.read_text())
 
     if args.enable:

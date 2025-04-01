@@ -154,7 +154,7 @@ button:hover {
 /* └─┘┴─┘└─┘└─┘┴ ┴ */
 #clock {
   border-radius: 0 0 30px 30px;
-  min-width: 300px;
+  min-width: 200px;
   background-color: @background;
   transition: 0.4s;
   border-bottom: solid 0.2px @foreground;
@@ -163,7 +163,7 @@ button:hover {
 }
 
 #clock:hover {
-  min-width: 400px;
+  min-width: 300px;
 }
 
 /* ┌┐ ┌─┐┌┬┐┌┬┐┌─┐┬─┐┬ ┬ */

@@ -29,8 +29,8 @@
 
   "modules-right": [
       // "cava",
-      "custom/network_speed",
       "custom/pacman",
+      "custom/network_speed",
       "memory",
       "tray",
       "custom/battery",
@@ -82,7 +82,7 @@
   // Custom/network_speed 
   //----------------------
   "custom/network_speed": {
-    "format": " {}  ",
+    "format": "   {}",
     "exec": "~/.config/waybar/modules/network_speed.py",
     "exec-if": "exit 0",
     "interval": 1

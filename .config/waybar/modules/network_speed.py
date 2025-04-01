@@ -11,11 +11,11 @@ from time import sleep
 # DONE: ####   -----=== global variables ===-----   ####
 
 SHOW = "set"  # get, set, all
-ICON = True  # True, False
+ICON = False  # True, False
 IF_ONLY_ONE = True  # if you choise only get or set icon will be this
 DEBUG = False  # show print no write current
 DELAY_TIME = 1  # for while in seconds
-SPACE = 2  # space between icon and speed
+SPACE = 0  # space between icon and speed
 
 # --- icons ---
 IF_ONLY_ONE_ICON = ""
