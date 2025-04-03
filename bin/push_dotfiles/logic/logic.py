@@ -6,7 +6,6 @@
 
 # DONE: ------=== Imports ===------
 import os
-from os.path import isdir
 import subprocess
 import random
 import shutil

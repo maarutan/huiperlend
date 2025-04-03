@@ -1,6 +1,8 @@
-/* ┌─┐┌─┐┌┐┌┌─┐┬┌─┐┬ ┬┬─┐┌─┐ */
-/* │  │ ││││├┤ ││ ┬│ │├┬┘├┤  */
-/* └─┘└─┘┘└┘└  ┴└─┘└─┘┴└─└─┘ */
+/*
+   ┌─┐┌─┐┌┐┌┌─┐┬┌─┐┬ ┬┬─┐┌─┐ 
+   │  │ ││││├┤ ││ ┬│ │├┬┘├┤  
+   └─┘└─┘┘└┘└  ┴└─┘└─┘┴└─└─┘ 
+*/
 
 @import url("../.colorscheme/theme.css");
 * {
@@ -12,11 +14,10 @@
 /* │││││││ │││ ││││└─┐ */
 /* └┴┘┴┘└┘─┴┘└─┘└┴┘└─┘ */
 window#waybar {
-  background: transparent;
+  background: @background;
   color: @foreground;
-
-  transition: 0.5s;
   transition-duration: 0.5s;
+  border-radius: 8px;
 }
 
 window#waybar.termite {
@@ -89,6 +90,21 @@ button:hover {
   opacity: 0.7;
 }
 
+/* ┌─┐┌┐┌┌┬┐ */
+/* ├┤ │││ ││ */
+/* └─┘┘└┘─┴┘ */
+.modules-left {
+  margin: 6 0px;
+  padding-left: 40px;
+}
+
+.modules-center {
+}
+
+.modules-right {
+  padding-right: 40px;
+}
+
 /* ┌─┐┬ ┬┌─┐┌┬┐┌─┐┌┬┐ */
 /* │  │ │└─┐ │ │ ││││ */
 /* └─┘└─┘└─┘ ┴ └─┘┴ ┴ */
@@ -123,61 +139,12 @@ button:hover {
 
 #window,
 #workspaces {
-  transition: 0.5s;
   margin: 0 4px;
 }
-
-/* ┌─┐┌┐┌┌┬┐ */
-/* ├┤ │││ ││ */
-/* └─┘┘└┘─┴┘ */
-.modules-left {
-  border: solid 0.2px @foreground;
-  padding: 7px;
-  margin: 5px 0;
-  transition: 0.5s;
-  margin-left: 10px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.6); /* Пример rgba */
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.12);
-}
-
-.modules-center {
-  border-radius: 0 0 30px 30px;
-  min-width: 200px;
-  background-color: @background;
-  transition: 0.4s;
-  border-bottom: solid 0.2px @foreground;
-  border-left: solid 0.2px @foreground;
-  border-right: solid 0.2px @foreground;
-}
-
-.modules-right {
-  border: solid 0.2px @foreground;
-  padding: 7px;
-  margin: 5px 0;
-  margin-right: 10px;
-  transition: 0.5s;
-  /* margin: 10px 10px 5px 0; */
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.6); /* Пример rgba */
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.12);
-}
-
-/* ┌─┐┬  ┌─┐┌─┐┬┌─ */
-/* │  │  │ ││  ├┴┐ */
-/* └─┘┴─┘└─┘└─┘┴ ┴ */
-#clock {
-  min-width: 200px;
-  transition: 0.5s;
-}
-
-#clock:hover {
-  min-width: 300px;
-}
-
 /* ┌┐ ┌─┐┌┬┐┌┬┐┌─┐┬─┐┬ ┬ */
 /* ├┴┐├─┤ │  │ ├┤ ├┬┘└┬┘ */
 /* └─┘┴ ┴ ┴  ┴ └─┘┴└─ ┴  */
+
 #battery {
   background-color: @foreground;
   color: @crust;
@@ -204,6 +171,7 @@ button:hover {
 #tray {
   background-color: transparent;
   padding: 0 10px;
+  transition: 0.5s;
 }
 
 #tray > .passive {
@@ -212,6 +180,7 @@ button:hover {
 
 #tray > .needs-attention {
   -gtk-icon-effect: highlight;
+  padding: 0 10px;
   background-color: @red;
 }
 

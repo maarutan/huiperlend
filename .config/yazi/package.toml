@@ -1,26 +1,26 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "a1b678d"
-hash = "9dce00232a0e0e2502565c7aa2b0ed4e"
+rev = "2730199"
+hash = "1f3dad061209081a6b04dd6ff2cb06c7"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-enter"
-rev = "a1b678d"
+rev = "2730199"
 hash = "7918aab6a71caf31b58411f789195677"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:jump-to-char"
-rev = "a1b678d"
+rev = "2730199"
 hash = "a670c03eb3760812e044a24f94cedc55"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "a1b678d"
-hash = "bcbf72738d4b7fb9a03cac84465b9ba4"
+rev = "2730199"
+hash = "e0d2c8d7e7afe5b82270367098d1a821"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "a1b678d"
+rev = "2730199"
 hash = "2f1053f89d1a301a648ab181d0948e38"
 
 [[plugin.deps]]
@@ -50,7 +50,7 @@ hash = "9f13f0740fa3a0c18e47ec6fb62ddfaa"
 
 [[plugin.deps]]
 use = "orhnk/system-clipboard"
-rev = "7775a80"
+rev = "efb8f03"
 hash = "9b8f2573da54334b04747e51556040cc"
 
 [[plugin.deps]]
@@ -65,17 +65,22 @@ hash = "72355a6c8b7c8de6ed4dda0f98f86fee"
 
 [[plugin.deps]]
 use = "hankertrix/augment-command"
-rev = "e676d3c"
-hash = "50edde70fad24f7b0e9922729312dbd7"
+rev = "c448bc3"
+hash = "b1956cbe1f2514232df99accbe0d292"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:toggle-pane"
-rev = "a1b678d"
-hash = "812fd49667ab6823250f0411f8cf793a"
+rev = "2730199"
+hash = "5c9dda1a587b8f5b6f63e3d5375bda88"
+
+[[plugin.deps]]
+use = "boydaihungst/simple-tag"
+rev = "837f702"
+hash = "e1c65491ab72954e1607a25b2e49a936"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
-rev = "c023460"
+rev = "68326b4"
 hash = "2ac87e1b3a61f5887472899e86535d29"
 
 [[flavor.deps]]

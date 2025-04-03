@@ -27,6 +27,16 @@ prepend_previewers = [
   { name = "*/",                    run = "eza-preview"},
 ]
 
+[[plugin.prepend_fetchers]]
+id = "simple-tag"
+name = "*" 
+run = "simple-tag" 
+
+[[plugin.prepend_fetchers]]
+id = "simple-tag"
+name = "*/" 
+run = "simple-tag" 
+
 [opener]
 extract = [
 	{ run = 'ouch d -y "%*"', desc = "Extract here with ouch", for = "windows" },
@@ -58,6 +68,7 @@ open = [
 [manager]
 sort_by = "natural"
 linemode = "size"
+
 
 
 
