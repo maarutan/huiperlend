@@ -43,24 +43,84 @@ def reload():
     subprocess.run(["waybar", "-c", str(CONFIG_JSON), "-s", str(read_jsonc())])
 
 
-def read_jsonc():
+def read_json_without_comments():
     with open(CONFIG_JSON, "r") as f:
         jsonc_content = f.read()
         jsonc_content = re.sub(r"//.*", "", jsonc_content)
         jsonc_content = re.sub(r",\s*(]|})", r"\1", jsonc_content)
         data = json.loads(jsonc_content)
-        return (
-            pathlib.Path(__file__).parent / DIR_NAME_COLORSHEME / data["style-config"]
-        )
+        return data
+
+
+def read_jsonc():
+    data = read_json_without_comments()
+    result = pathlib.Path(__file__).parent / DIR_NAME_COLORSHEME / data["style-config"]
+    return result
 
 
 def current_style_css_name():
+    data = read_json_without_comments()
+    return data["style-config"]
+
+
+def read_json_how_txt():
     with open(CONFIG_JSON, "r") as f:
-        jsonc_content = f.read()
-        jsonc_content = re.sub(r"//.*", "", jsonc_content)
-        jsonc_content = re.sub(r",\s*(]|})", r"\1", jsonc_content)
-        data = json.loads(jsonc_content)
-        return data["style-config"]
+        return f.read()
+
+
+def replice_configure():
+    if not args.theme:
+        return None
+
+    dir_path = CONFIG_JSON.parent / DIR_NAME_COLORSHEME
+    theme_config_json = dir_path / args.theme / "config.json"
+
+    if not theme_config_json.exists():
+        raise FileNotFoundError(f"Config not found: {theme_config_json}")
+
+    with open(CONFIG_JSON, "r") as f:
+        base_config_lines = f.readlines()
+
+    with open(theme_config_json, "r") as f:
+        config_style_data = json.load(f)
+
+    matched_keys = {}
+
+    for line in base_config_lines:
+        for k, v in config_style_data.items():
+            pattern = rf'^\s*"{re.escape(k)}"\s*:'
+            if re.search(pattern, line):
+                matched_keys[k] = v
+
+    return matched_keys if matched_keys else None
+
+
+def set_theme():
+    replacements = replice_configure()
+    if not replacements:
+        print("No matching keys to replace.")
+        return
+
+    with open(CONFIG_JSON, "r") as f:
+        base_lines = f.readlines()
+
+    new_lines = []
+    for line in base_lines:
+        replaced = False
+        for key, value in replacements.items():
+            pattern = rf'^(\s*"{re.escape(key)}"\s*:\s*)(.+?)(,?)\s*$'
+            match = re.match(pattern, line)
+            if match:
+                new_value = json.dumps(value)
+                line = f"{match.group(1)}{new_value}{match.group(3)}\n"
+                replaced = True
+                break
+        new_lines.append(line)
+
+    with open(CONFIG_JSON, "w") as f:
+        f.writelines(new_lines)
+
+    print("✔ Theme applied successfully!")
 
 
 def main(args):
@@ -68,15 +128,11 @@ def main(args):
         dir_path = CONFIG_JSON.parent / DIR_NAME_COLORSHEME
         theme_path = dir_path / args.theme / "style.css"
         target_path = dir_path / current_style_css_name()
-
-        theme_config_json = dir_path / args.theme / "config.json"
-        if pathlib.Path(theme_config_json).exists():
-            with open(theme_config_json, "r") as f:
-                config_style_data = f.read()
-            print(config_style_data)
-
+        try:
+            set_theme()
+        except:
+            print(f"{args.theme}: not have `config.json`")
         target_path.write_text(theme_path.read_text())
-
     if args.enable:
         enable_bar()
     elif args.disable:
@@ -89,6 +145,7 @@ def main(args):
         reload()
     elif args.theme is None:
         enable_bar()
+        ...
 
 
 if __name__ == "__main__":
