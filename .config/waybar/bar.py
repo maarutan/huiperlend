@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import re
 import pathlib
 import json
@@ -7,10 +8,14 @@ import argparse
 import subprocess
 import time
 
+Path = pathlib.Path
 
-CONFIG_JSON = pathlib.Path(__file__).parent / "config.jsonc"
+
+CONFIG_JSON = Path(__file__).parent / "config.jsonc"
 DIR_NAME_COLORSHEME = "theme"
-TMP_FILE = pathlib.Path("/tmp/bar_toggle")
+TMP_FILE = Path("/tmp/bar_toggle")
+ASSETS_TYPES = Path(__file__).parent / ".assets" / "types"
+ROFI_THEME = ASSETS_TYPES.parent / "rofi_theme" / "wall.rasi"
 
 
 def enable_bar():
@@ -54,7 +59,7 @@ def read_json_without_comments():
 
 def read_jsonc():
     data = read_json_without_comments()
-    result = pathlib.Path(__file__).parent / DIR_NAME_COLORSHEME / data["style-config"]
+    result = Path(__file__).parent / DIR_NAME_COLORSHEME / data["style-config"]
     return result
 
 
@@ -68,12 +73,12 @@ def read_json_how_txt():
         return f.read()
 
 
-def replice_configure():
-    if not args.theme:
+def replice_configure(theme_name):
+    if not theme_name:
         return None
 
     dir_path = CONFIG_JSON.parent / DIR_NAME_COLORSHEME
-    theme_config_json = dir_path / args.theme / "config.json"
+    theme_config_json = dir_path / theme_name / "config.json"
 
     if not theme_config_json.exists():
         raise FileNotFoundError(f"Config not found: {theme_config_json}")
@@ -95,8 +100,8 @@ def replice_configure():
     return matched_keys if matched_keys else None
 
 
-def set_theme():
-    replacements = replice_configure()
+def set_theme(theme_name):
+    replacements = replice_configure(theme_name)
     if not replacements:
         print("No matching keys to replace.")
         return
@@ -123,18 +128,54 @@ def set_theme():
     print("✔ Theme applied successfully!")
 
 
+def path_theme_image() -> tuple[list[str], list[str]]:
+    only_name = [Path(i).stem for i in os.listdir(ASSETS_TYPES)]
+    abs_path = [str(ASSETS_TYPES / i) for i in os.listdir(ASSETS_TYPES)]
+    return only_name, abs_path
+
+
+def get_info_image() -> list[str]:
+    only_names, abs_paths = path_theme_image()
+    return [f"{name}\x00icon\x1f{path}" for name, path in zip(only_names, abs_paths)]
+
+
+def rofi() -> str:
+    result = subprocess.run(
+        ["rofi", "-theme", ROFI_THEME, "-dmenu"],
+        input="\n".join(get_info_image()),
+        text=True,
+        capture_output=True,
+    )
+    return result.stdout.strip()
+
+
+def launtcher():
+    theme_name = rofi()
+    dir_path = CONFIG_JSON.parent / DIR_NAME_COLORSHEME
+    theme_path = dir_path / theme_name / "style.css"
+    target_path = dir_path / current_style_css_name()
+    try:
+        set_theme(theme_name)
+    except:
+        print(f"{theme_name}: not have `config.json`")
+    target_path.write_text(theme_path.read_text())
+    reload()
+
+
 def main(args):
     if args.theme:
         dir_path = CONFIG_JSON.parent / DIR_NAME_COLORSHEME
         theme_path = dir_path / args.theme / "style.css"
         target_path = dir_path / current_style_css_name()
         try:
-            set_theme()
+            set_theme(args.theme)
         except:
             print(f"{args.theme}: not have `config.json`")
         target_path.write_text(theme_path.read_text())
     if args.enable:
         enable_bar()
+    elif args.launtcher:
+        launtcher()
     elif args.disable:
         disable_bar()
     elif args.autostart:
@@ -156,9 +197,10 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--toggle", action="store_true", help="Toggle Bar")
     parser.add_argument("-a", "--autostart", action="store_true", help="Autostart Bar")
     parser.add_argument("-r", "--reload", action="store_true", help="Reload Bar")
+    parser.add_argument("-l", "--launtcher", action="store_true", help="Rofi Bar")
 
     args, unknown = parser.parse_known_args()
     try:
-        print(main(args))
+        main(args)
     except KeyboardInterrupt:
         print("~ cancel ^^")
