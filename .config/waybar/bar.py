@@ -26,7 +26,7 @@ def enable_bar():
 
 def disable_bar():
     TMP_FILE.write_text("disable")
-    subprocess.Popen(["pkill", "-x", "waybar"])
+    subprocess.Popen(["killall", "waybar"])
 
 
 def autostart():
@@ -44,7 +44,7 @@ def toggle():
 
 
 def reload():
-    subprocess.run(["pkill", "-x", "waybar"])
+    subprocess.run(["killall", "waybar"])
     subprocess.run(["waybar", "-c", str(CONFIG_JSON), "-s", str(read_jsonc())])
 
 
@@ -150,6 +150,7 @@ def rofi() -> str:
 
 
 def launtcher():
+    subprocess.run(["pkill", "-x", "waybar"])
     theme_name = rofi()
     dir_path = CONFIG_JSON.parent / DIR_NAME_COLORSHEME
     theme_path = dir_path / theme_name / "style.css"
