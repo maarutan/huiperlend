@@ -44,7 +44,6 @@
 "memory",
 "custom/battery",
 "custom/network",
-"battery",
 "hyprland/language",
 "custom/power"
 ],

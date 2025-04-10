@@ -25,6 +25,12 @@ prepend_previewers = [
 	{ mime = "application/x-rar",           run = "ouch" },
 	{ mime = "application/x-xz",            run = "ouch" },
   { name = "*/",                    run = "eza-preview"},
+  { name = "*.csv", run = "rich-preview"}, # for csv files
+  { name = "*.md", run = "rich-preview" }, # for markdown (.md) files
+  { name = "*.rst", run = "rich-preview"}, # for restructured text (.rst) files
+  { name = "*.ipynb", run = "rich-preview"}, # for jupyter notebooks (.ipynb)
+  { name = "*.py", run = "rich-preview"}, # for jupyter notebooks (.ipynb)
+  { name = "*.json", run = "rich-preview"}, # for json (.json) files
 ]
 
 [[plugin.prepend_fetchers]]

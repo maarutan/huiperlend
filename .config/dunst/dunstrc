@@ -9,7 +9,7 @@ foreground    = "#C1CDE6"
 frame_color   = "#89B4FA"
 
 
-corner_radius = 0
+corner_radius = 8
 transparency  = 0
 
 # no change ------------
@@ -37,7 +37,7 @@ progress_bar_min_width             = 150
 #progress_bar_max_width            = 300
 progress_bar_horizontal_alignment  = center
 progress_bar_frame_width    = 3
-progress_bar_corner_radius = 0
+progress_bar_corner_radius = 8
 progress_bar_corners        = all
 
 

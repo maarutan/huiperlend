@@ -26,7 +26,7 @@ def enable_bar():
 
 def disable_bar():
     TMP_FILE.write_text("disable")
-    subprocess.Popen(["killall", "waybar"])
+    subprocess.run(["killall", "waybar"])
 
 
 def autostart():
@@ -44,8 +44,8 @@ def toggle():
 
 
 def reload():
-    subprocess.run(["killall", "waybar"])
-    subprocess.run(["waybar", "-c", str(CONFIG_JSON), "-s", str(read_jsonc())])
+    disable_bar()
+    enable_bar()
 
 
 def read_json_without_comments():
